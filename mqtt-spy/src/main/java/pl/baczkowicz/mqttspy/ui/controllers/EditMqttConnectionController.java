@@ -15,6 +15,7 @@
  * Contributors:
  * 
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    Olivier Matheret - add HTTP-Proxy feature
  *    
  */
 package pl.baczkowicz.mqttspy.ui.controllers;
@@ -52,13 +53,7 @@ import pl.baczkowicz.mqttspy.configuration.ConfiguredMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.ui.MqttConnectionViewManager;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionConnectivityController;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionLastWillController;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionMessageLogController;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionOtherController;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionPublicationsController;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionSecurityController;
-import pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionSubscriptionsController;
+import pl.baczkowicz.mqttspy.ui.controllers.edit.*;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectivityUtils;
 import pl.baczkowicz.mqttspy.utils.ConnectionUtils;
 import pl.baczkowicz.spy.common.generated.ConnectionGroupReference;
@@ -94,9 +89,12 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 	
 	@FXML
 	private Tab subscriptionsTab;
-	
+
 	@FXML
 	private Tab otherTab;
+
+	@FXML
+	private Tab proxyTab;
 
 	@FXML
 	private Tab logTab;
@@ -134,7 +132,10 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 	
 	@FXML
 	private EditConnectionOtherController editConnectionOtherController;
-	
+
+	@FXML
+	private EditConnectionProxyController editConnectionProxyController;
+
 	@FXML
 	private EditConnectionPublicationsController editConnectionPublicationsController;
 	
@@ -198,6 +199,7 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 		editConnectionLastWillController.setParent(this);
 		editConnectionMessageLogController.setParent(this);
 		editConnectionOtherController.setParent(this);
+		editConnectionProxyController.setParent(this);
 		editConnectionPublicationsController.setParent(this);
 		editConnectionSecurityController.setParent(this);
 		editConnectionSubscriptionsController.setParent(this);
@@ -301,6 +303,7 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 		editConnectionLastWillController.init();
 		editConnectionMessageLogController.init();
 		editConnectionOtherController.init();
+		editConnectionProxyController.init();
 		editConnectionPublicationsController.init();
 		editConnectionSecurityController.init();
 		editConnectionSubscriptionsController.init();		
@@ -335,6 +338,7 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 		{
 			tabPane.getTabs().remove(subscriptionsTab);
 			tabPane.getTabs().remove(otherTab);
+			tabPane.getTabs().remove(proxyTab);
 			tabPane.getTabs().remove(logTab);
 			tabPane.getTabs().remove(ltwTab);
 		}
@@ -524,6 +528,7 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 		
 		editConnectionConnectivityController.readValues(connection);
 		editConnectionOtherController.readValues(connection);
+		editConnectionProxyController.readValues(connection);
 		editConnectionSecurityController.readValues(connection);
 		editConnectionMessageLogController.readValues(connection);
 		editConnectionPublicationsController.readValues(connection);
@@ -635,6 +640,7 @@ public class EditMqttConnectionController extends AnchorPane implements Initiali
 		editConnectionSecurityController.displayConnectionDetails(connection);
 		editConnectionMessageLogController.displayConnectionDetails(connection);
 		editConnectionOtherController.displayConnectionDetails(connection);
+		editConnectionProxyController.displayConnectionDetails(connection);
 		editConnectionPublicationsController.displayConnectionDetails(connection);
 		editConnectionSubscriptionsController.displayConnectionDetails(connection);
 		editConnectionLastWillController.displayConnectionDetails(connection);

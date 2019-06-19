@@ -22,6 +22,8 @@ package pl.baczkowicz.mqttspy.configuration;
 import pl.baczkowicz.mqttspy.common.generated.MessageLog;
 import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.utils.MqttConfigurationUtils;
+import pl.baczkowicz.spy.common.generated.ProxyMode;
+import pl.baczkowicz.spy.common.generated.ProxyModeEnum;
 import pl.baczkowicz.spy.storage.MessageList;
 
 public class ConfigurationUtils
@@ -67,6 +69,11 @@ public class ConfigurationUtils
 		if (connection.isAutoSubscribe() == null)
 		{
 			connection.setAutoSubscribe(false);
+		}
+
+		if (connection.getProxyMode() == null)
+		{
+			connection.setProxyMode(new ProxyMode(ProxyModeEnum.NO_PROXY, null, null, null, null));
 		}
 	}
 }

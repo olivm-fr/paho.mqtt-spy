@@ -17,6 +17,7 @@
  * Contributors:
  * 
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    Olivier Matheret - add HTTP-Proxy feature
  *    
  */
 -->
@@ -83,7 +84,7 @@
 			<xs:element name="Reference" 			type="xs:IDREF" />
 		</xs:sequence>
 	</xs:complexType>	
-	
+
 	<xs:simpleType name="SecureSocketModeEnum">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="DISABLED" />
@@ -117,7 +118,25 @@
 		<xs:attribute 	name="topic" 				type="xs:string" use="required" />
 		<xs:attribute 	name="scriptFile"			type="xs:string" />
 	</xs:complexType>
-	
+
+	<xs:complexType name="ProxyMode">
+		<xs:sequence>
+			<xs:element name="Type" 				type="spycommon:ProxyModeEnum" minOccurs="1" />
+			<xs:element name="Hostname" 			type="xs:string" minOccurs="0" />
+			<xs:element name="Port" 				type="xs:int" minOccurs="0" />
+			<xs:element name="Username" 			type="xs:string" minOccurs="0" />
+			<xs:element name="Password" 			type="xs:string" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="ProxyModeEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NO_PROXY" />
+			<xs:enumeration value="SOCKS" />
+			<xs:enumeration value="HTTP" />
+		</xs:restriction>
+	</xs:simpleType>
+
 	<!-- ==================== -->
 	<!-- === TASKS ========== -->
 	<!-- ==================== -->

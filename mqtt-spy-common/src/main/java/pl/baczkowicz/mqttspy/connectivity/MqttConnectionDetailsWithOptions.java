@@ -15,6 +15,7 @@
  * Contributors:
  * 
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    Olivier Matheret - add HTTP-Proxy feature
  *    
  */
 package pl.baczkowicz.mqttspy.connectivity;
@@ -27,11 +28,16 @@ import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
 import pl.baczkowicz.mqttspy.common.generated.ProtocolVersionEnum;
 import pl.baczkowicz.mqttspy.utils.MqttConfigurationUtils;
 import pl.baczkowicz.spy.common.generated.Property;
+import pl.baczkowicz.spy.common.generated.ProxyModeEnum;
 import pl.baczkowicz.spy.common.generated.SecureSocketModeEnum;
+import pl.baczkowicz.spy.connectivity.ProxyManager;
 import pl.baczkowicz.spy.exceptions.ConfigurationException;
 import pl.baczkowicz.spy.exceptions.SpyException;
 import pl.baczkowicz.spy.security.SecureSocketFactoryBuilder;
 import pl.baczkowicz.spy.utils.ConversionUtils;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Extends JAXB-generated class for storing MQTT connection details, by adding the Paho's MqttConnectOptions.
@@ -62,6 +68,7 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		this.setName(details.getName());
 		this.setClientID(details.getClientID());
 		this.getServerURI().addAll(details.getServerURI());
+		this.setProxyMode(details.getProxyMode());
 		
 		this.setConnectionTimeout(details.getConnectionTimeout());
 		this.setKeepAliveInterval(details.getKeepAliveInterval());
@@ -135,12 +142,12 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 					getLastWillAndTestament().getQos(),
 					getLastWillAndTestament().isRetained());
 		}
-		
+
 		// SSL and TLS
 		if (getSSL() == null) 
 		{
 			// No SSL/TLS settings available
-		} 
+		}
 		else 
 		{
 			if (SecureSocketModeEnum.PROPERTIES.equals(getSSL().getMode()))			
@@ -192,6 +199,16 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 			
 			// TODO: set connection protocol to SSL if not done already
 		}
+
+		// Proxy
+		if (getProxyMode() != null && getProxyMode().getType() != ProxyModeEnum.NO_PROXY) {
+			ProxyManager.loadProxy(getProxyMode().getHostname(), getProxyMode().getPort(),getProxyMode().getUsername(), getProxyMode().getPassword());
+			if (options.getSocketFactory() instanceof SSLSocketFactory)
+				options.setSocketFactory(new HttpsProxySocketFactory((SSLSocketFactory)options.getSocketFactory()));
+			else
+				options.setSocketFactory(new HttpProxySocketFactory());
+		}
+
 	}
 	
 	/**

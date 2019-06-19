@@ -18,6 +18,7 @@
  * Contributors:
  * 
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    Olivier Matheret - add HTTP-Proxy feature
  *    
  */
 -->
@@ -87,6 +88,11 @@
               <content>
                 <fx:include fx:id="editConnectionSecurity" source="EditConnectionSecurityPane.fxml" />
               </content>
+            </Tab>
+            <Tab fx:id="proxyTab" text="Proxy">
+                <content>
+                    <fx:include fx:id="editConnectionProxy" source="EditConnectionProxyPane.fxml" />
+                </content>
             </Tab>
             <Tab  fx:id="ltwTab" text="Last Will">
                <content>

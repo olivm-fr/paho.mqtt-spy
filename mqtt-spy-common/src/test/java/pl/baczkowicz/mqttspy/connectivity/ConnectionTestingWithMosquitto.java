@@ -111,6 +111,7 @@ public class ConnectionTestingWithMosquitto
 				10, 
 				10, 
 				ssl, 
+				null,
 				null);
 	}
 	
