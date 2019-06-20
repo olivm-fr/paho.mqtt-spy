@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.HttpProxySocketFactory.HttpProxySocket;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.HandshakeCompletedListener;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.*;
 import java.nio.channels.SocketChannel;
@@ -61,13 +58,28 @@ public class HttpsProxySocketFactory extends SSLSocketFactory {
         }
 
         @Override
+        public InetAddress getLocalAddress() {
+            return sslSocket.getLocalAddress();
+        }
+
+        @Override
         public int getPort() {
             return sslSocket.getPort();
         }
 
         @Override
+        public int getLocalPort() {
+            return sslSocket.getLocalPort();
+        }
+
+        @Override
         public SocketAddress getRemoteSocketAddress() {
             return sslSocket.getRemoteSocketAddress();
+        }
+
+        @Override
+        public SocketAddress getLocalSocketAddress() {
+            return sslSocket.getLocalSocketAddress();
         }
 
         @Override
@@ -206,6 +218,11 @@ public class HttpsProxySocketFactory extends SSLSocketFactory {
         }
 
         @Override
+        public boolean isBound() {
+            return sslSocket.isBound();
+        }
+
+        @Override
         public boolean isClosed() {
             return sslSocket.isClosed();
         }
@@ -261,13 +278,18 @@ public class HttpsProxySocketFactory extends SSLSocketFactory {
         }
 
         @Override
+        public SSLSession getHandshakeSession() {
+            return sslSocket.getHandshakeSession();
+        }
+
+        @Override
         public void addHandshakeCompletedListener(HandshakeCompletedListener handshakeCompletedListener) {
             sslSocket.addHandshakeCompletedListener(handshakeCompletedListener);
         }
 
         @Override
         public void removeHandshakeCompletedListener(HandshakeCompletedListener handshakeCompletedListener) {
-            removeHandshakeCompletedListener(handshakeCompletedListener);
+            sslSocket.removeHandshakeCompletedListener(handshakeCompletedListener);
         }
 
         @Override
@@ -313,6 +335,16 @@ public class HttpsProxySocketFactory extends SSLSocketFactory {
         @Override
         public boolean getEnableSessionCreation() {
             return sslSocket.getEnableSessionCreation();
+        }
+
+        @Override
+        public SSLParameters getSSLParameters() {
+            return sslSocket.getSSLParameters();
+        }
+
+        @Override
+        public void setSSLParameters(SSLParameters sslParameters) {
+            sslSocket.setSSLParameters(sslParameters);
         }
     }
 
