@@ -4,7 +4,7 @@
 
 	<groupId>org.eclipse.paho.mqttspy</groupId>
 	<artifactId>mqtt-spy</artifactId>
-	<version>1.0.1-beta</version>
+	<version>1.0.1-proxy</version>
 	<packaging>jar</packaging>
 
 	<name>mqtt-spy</name>
@@ -172,8 +172,46 @@
 					</execution>
 				</executions>
 			</plugin>
- 
- 			<!-- Generate build number -->
+
+			<!-- Create an installer -->
+			<plugin>
+				<groupId>com.zenjava</groupId>
+				<artifactId>javafx-maven-plugin</artifactId>
+				<version>8.8.3</version>
+				<configuration>
+					<mainClass>pl.baczkowicz.mqttspy.Main</mainClass>
+					<bundler>ALL</bundler> <!-- one of ALL, windows.app, linux.app, mac.app, mac.appStore, exe, msi, deb, rpm, dmg, pkg -->
+					<jfxAppOutputDir>${project.build.directory}/app</jfxAppOutputDir>
+					<nativeOutputDir>${project.build.directory}/native</nativeOutputDir>
+					<vendor>Eclipse</vendor>
+					<appName>${project.name}</appName>
+					<title>${project.name}</title>
+					<description>${project.description}</description>
+					<jfxMainAppJarName>${project.build.finalName}.jar</jfxMainAppJarName>
+					<nativeReleaseVersion>${project.version}</nativeReleaseVersion>
+					<verbose>true</verbose>
+				</configuration>
+				<executions>
+					<execution>
+						<!-- required before build-native -->
+						<id>create-jfxjar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build-jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>create-native</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build-native</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- Generate build number -->
  			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
