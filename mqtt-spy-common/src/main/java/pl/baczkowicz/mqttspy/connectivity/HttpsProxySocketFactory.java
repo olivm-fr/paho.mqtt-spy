@@ -9,13 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.HttpProxySocketFactory.HttpProxySocket;
 
-import javax.net.SocketFactory;
 import javax.net.ssl.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.*;
 import java.nio.channels.SocketChannel;
-import java.util.Base64;
-import java.util.List;
 
 public class HttpsProxySocketFactory extends SSLSocketFactory {
     @Nullable
@@ -47,7 +46,7 @@ public class HttpsProxySocketFactory extends SSLSocketFactory {
 
         @Override
         public void connect(SocketAddress endpoint, int timeout) throws IOException {
-            plainSocket= new HttpProxySocket();
+            plainSocket = new HttpProxySocket();
             plainSocket.connect(endpoint, timeout);
             sslSocket = (SSLSocket) applicationSocketFactory.createSocket(plainSocket, ((InetSocketAddress) endpoint).getHostString(), ((InetSocketAddress) endpoint).getPort(), true);
         }
@@ -364,41 +363,26 @@ public class HttpsProxySocketFactory extends SSLSocketFactory {
 
     @Override
     public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException {
-        UnsupportedOperationException var1 = new UnsupportedOperationException();
-        SocketException var2 = new SocketException("Unconnected sockets not implemented");
-        var2.initCause(var1);
-        throw var2;
+        throw new UnsupportedOperationException(new SocketException("Unconnected sockets not implemented"));
     }
 
     @Override
     public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-        UnsupportedOperationException var1 = new UnsupportedOperationException();
-        SocketException var2 = new SocketException("Unconnected sockets not implemented");
-        var2.initCause(var1);
-        throw var2;
+        throw new UnsupportedOperationException(new SocketException("Unconnected sockets not implemented"));
     }
 
     @Override
     public Socket createSocket(String s, int i, InetAddress inetAddress, int i1) throws IOException, UnknownHostException {
-        UnsupportedOperationException var1 = new UnsupportedOperationException();
-        SocketException var2 = new SocketException("Unconnected sockets not implemented");
-        var2.initCause(var1);
-        throw var2;
+        throw new UnsupportedOperationException(new SocketException("Unconnected sockets not implemented"));
     }
 
     @Override
     public Socket createSocket(InetAddress inetAddress, int i) throws IOException {
-        UnsupportedOperationException var1 = new UnsupportedOperationException();
-        SocketException var2 = new SocketException("Unconnected sockets not implemented");
-        var2.initCause(var1);
-        throw var2;
+        throw new UnsupportedOperationException(new SocketException("Unconnected sockets not implemented"));
     }
 
     @Override
     public Socket createSocket(InetAddress inetAddress, int i, InetAddress inetAddress1, int i1) throws IOException {
-        UnsupportedOperationException var1 = new UnsupportedOperationException();
-        SocketException var2 = new SocketException("Unconnected sockets not implemented");
-        var2.initCause(var1);
-        throw var2;
+        throw new UnsupportedOperationException(new SocketException("Unconnected sockets not implemented"));
     }
 }

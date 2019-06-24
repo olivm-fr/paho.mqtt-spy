@@ -191,8 +191,14 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
-		</dependency>		
-		
+		</dependency>
+
+		<dependency>
+			<artifactId>httpclient</artifactId>
+			<groupId>org.apache.httpcomponents</groupId>
+			<version>LATEST</version>
+		</dependency>
+
 		<!--=== TEST === -->
 	
 		<dependency>

@@ -78,7 +78,11 @@ public class ProxyManager {
                                 return proxies;
                             }
                         } catch (UnknownHostException e) {
+                            // host is unknown : proxy might be compulsory to even access DNS !
                             logger.warn("Unknown hostname {}", h);
+                            InetSocketAddress addr = new InetSocketAddress(host, port);
+                            proxies.add(new Proxy(Proxy.Type.HTTP, addr));
+                            return proxies;
                         }
                     }
                     proxies.add(Proxy.NO_PROXY);
