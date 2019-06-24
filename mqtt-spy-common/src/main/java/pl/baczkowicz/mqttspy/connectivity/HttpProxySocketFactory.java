@@ -60,8 +60,8 @@ public class HttpProxySocketFactory extends SocketFactory {
                         .setSocketTimeout(timeout)
                         .setConnectTimeout(timeout)
                         .setConnectionRequestTimeout(timeout);
-                HttpHost target = new HttpHost(((InetSocketAddress) endpoint).getAddress(), ((InetSocketAddress) endpoint).getPort());
-                HttpHost proxyHost = new HttpHost(((InetSocketAddress) proxy.address()).getAddress(), ((InetSocketAddress) proxy.address()).getPort());
+                HttpHost target = new HttpHost(((InetSocketAddress) endpoint).getHostName(), ((InetSocketAddress) endpoint).getPort());
+                HttpHost proxyHost = new HttpHost(((InetSocketAddress) proxy.address()).getHostName(), ((InetSocketAddress) proxy.address()).getPort());
                 Credentials credentials;
                 if (pwd.getUserName().contains("/") || pwd.getUserName().contains("\\")) {
                     requestConfig.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.SPNEGO));
