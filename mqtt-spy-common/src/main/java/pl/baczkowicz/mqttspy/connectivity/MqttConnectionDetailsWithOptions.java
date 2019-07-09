@@ -201,8 +201,10 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		}
 
 		// Proxy
-		if (getProxyMode() != null && getProxyMode().getType() != ProxyModeEnum.NO_PROXY) {
-			ProxyManager.loadProxy(getProxyMode().getHostname(), getProxyMode().getPort(),getProxyMode().getUsername(), getProxyMode().getPassword());
+		if (getProxyMode() != null && getProxyMode().getType() != ProxyModeEnum.NO_PROXY
+			&& getProxyMode().getHostname() != null && getProxyMode().getHostname().length() > 0
+			&& getProxyMode().getPort() != null && getProxyMode().getPort() != 0) {
+			ProxyManager.loadProxy(getProxyMode().getHostname(), getProxyMode().getPort(), getProxyMode().getUsername(), getProxyMode().getPassword());
 			if (options.getSocketFactory() instanceof SSLSocketFactory)
 				options.setSocketFactory(new HttpsProxySocketFactory((SSLSocketFactory)options.getSocketFactory()));
 			else

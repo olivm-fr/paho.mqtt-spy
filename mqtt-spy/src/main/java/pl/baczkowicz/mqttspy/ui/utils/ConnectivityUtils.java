@@ -20,6 +20,7 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
 import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
+import pl.baczkowicz.spy.common.generated.ProxyModeEnum;
 
 
 /**
@@ -47,7 +48,16 @@ public class ConnectivityUtils
 				returnValue = "With user authentication enabled, user name cannot be empty";
 			}
 		}
-		
+
+		if (connectionDetails.getProxyMode() != null && connectionDetails.getProxyMode().getType() != ProxyModeEnum.NO_PROXY)
+		{
+			if (connectionDetails.getProxyMode().getHostname() == null || connectionDetails.getProxyMode().getHostname().length() == 0
+				|| connectionDetails.getProxyMode().getPort() == null || connectionDetails.getProxyMode().getPort() == 0)
+			{
+				returnValue = "With proxy enabled, hostname and port cannot be empty";
+			}
+		}
+
 		return returnValue;
 	}	
 }

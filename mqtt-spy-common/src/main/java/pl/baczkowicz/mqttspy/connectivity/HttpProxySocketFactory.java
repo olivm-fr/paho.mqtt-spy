@@ -63,14 +63,18 @@ public class HttpProxySocketFactory extends SocketFactory {
                 HttpHost target = new HttpHost(((InetSocketAddress) endpoint).getHostName(), ((InetSocketAddress) endpoint).getPort());
                 HttpHost proxyHost = new HttpHost(((InetSocketAddress) proxy.address()).getHostName(), ((InetSocketAddress) proxy.address()).getPort());
                 Credentials credentials;
-                if (pwd.getUserName().contains("/") || pwd.getUserName().contains("\\")) {
-                    requestConfig.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.SPNEGO));
-                    String[] usersplit = pwd.getUserName().split("/|\\\\", 2);
-                    credentials = new NTCredentials(usersplit[1], new String(pwd.getPassword()), InetAddress.getLocalHost().getHostName(), usersplit[0]);
+                if (pwd != null) {
+                    if (pwd.getUserName().contains("/") || pwd.getUserName().contains("\\")) {
+                        requestConfig.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.SPNEGO));
+                        String[] usersplit = pwd.getUserName().split("/|\\\\", 2);
+                        credentials = new NTCredentials(usersplit[1], new String(pwd.getPassword()), InetAddress.getLocalHost().getHostName(), usersplit[0]);
+                    } else {
+                        requestConfig.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
+                        credentials = new UsernamePasswordCredentials(pwd.getUserName(), new String(pwd.getPassword()));
+                    }
                 }
                 else {
-                    requestConfig.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
-                    credentials = new UsernamePasswordCredentials(pwd.getUserName(), new String(pwd.getPassword()));
+                    credentials = new UsernamePasswordCredentials("", "");
                 }
                 try {
                     ProxyClient proxyClient = new ProxyClient(requestConfig.build());
