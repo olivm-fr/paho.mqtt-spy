@@ -81,7 +81,18 @@ public class ConnectionsControlPanelItem implements IControlPanelItem
 		while (controller.getCustomItems().getChildren().size() > 2) { controller.getCustomItems().getChildren().remove(2); }
 		
 		final int connectionCount = configurationManager.getConnections().size();
-		if (connectionCount > 0)
+		if (configurationManager.getLoadedConfigurationFile() == null) {
+			controller.setTitle("Cannot define connections without configuration file.");
+			controller.setDetails("Check options on the previous pane for resolving missing configuration file.");
+			controller.setStatus(ItemStatus.ERROR);
+			button.setOnAction(new EventHandler<ActionEvent>()
+			{
+				@Override
+				public void handle(ActionEvent event)
+				{
+				}
+			});
+		} else if (connectionCount > 0)
 		{
 			controller.setTitle("You have " + connectionCount + " " + "connection" + (connectionCount > 1 ? "s" : "") + " configured.");
 			controller.setDetails("Click here to edit your connections or on the relevant button to open, connect, reconnect or disconnect.");
