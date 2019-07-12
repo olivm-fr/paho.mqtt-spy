@@ -26,11 +26,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -194,7 +190,7 @@ public class MqttSpyMainController
 		controlPanelPaneController.setConfigurationMananger(configurationManager);
 		controlPanelPaneController.setEventBus(eventBus);		
 		controlPanelPaneController.setVersionManager(versionManager);
-		controlPanelPaneController.init();	
+        controlPanelPaneController.init();
 		
 		new Thread(new ConnectionStatsUpdater(connectionViewManager)).start();
 		
@@ -213,28 +209,39 @@ public class MqttSpyMainController
 	@FXML
 	public void createNewConnection()
 	{
-		logger.trace("Creating new connection...");
-		eventBus.publish(new ShowEditConnectionsWindowEvent(getParentWindow(), true, null));
+		if (configurationManager.getLoadedConfigurationFile() != null) {
+			logger.trace("Creating new connection...");
+			eventBus.publish(new ShowEditConnectionsWindowEvent(getParentWindow(), true, null));
+		}
+		else {
+			DialogFactory.createErrorDialog("Missing configuration file.", "Cannot define connections without configuration file.\n\nCheck options on the main window or restore default configuration from the \"Configuration\" menu.");
+		}
 	}
 
 	@FXML
 	public void editConnections()
 	{
-		eventBus.publish(new ShowEditConnectionsWindowEvent(getParentWindow(), false, null));
+		if (configurationManager.getLoadedConfigurationFile() != null) {
+			eventBus.publish(new ShowEditConnectionsWindowEvent(getParentWindow(), false, null));
+		}
+		else {
+			DialogFactory.createErrorDialog("Missing configuration file.", "Cannot define connections without configuration file.\n\nCheck options on the main window or restore default configuration from the \"Configuration\" menu.");
+		}
 	}
 	
 	@FXML
 	public void newSubscription()
 	{
-		final Tab selectedTab = this.getConnectionTabs().getSelectionModel().getSelectedItem();
-		final MqttConnectionController controller = (MqttConnectionController) connectionViewManager.getControllerForTab(selectedTab);
-		
-		if (controller != null)
-		{
-			eventBus.publish(new ShowNewMqttSubscriptionWindowEvent(
-					controller, 
-					PaneVisibilityStatus.DETACHED,
-					controller.getNewSubscriptionPaneStatus().getVisibility()));
+		if (configurationManager.getLoadedConfigurationFile() != null) {
+			final Tab selectedTab = this.getConnectionTabs().getSelectionModel().getSelectedItem();
+			final MqttConnectionController controller = (MqttConnectionController) connectionViewManager.getControllerForTab(selectedTab);
+
+			if (controller != null) {
+				eventBus.publish(new ShowNewMqttSubscriptionWindowEvent(
+						controller,
+						PaneVisibilityStatus.DETACHED,
+						controller.getNewSubscriptionPaneStatus().getVisibility()));
+			}
 		}
 	}
 
