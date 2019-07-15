@@ -32,7 +32,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -165,7 +164,9 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 	private AnchorPane paneTitle;
 
 	protected MqttConnectionController connectionController;
-	
+
+	private Double initialPaneSize;
+
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		timeBasedFilter = new TimeBasedKeyEventFilter(500);
@@ -276,10 +277,10 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 	    });
 			
 		publicationData.setWrapText(true);
-		publicationData.setOnKeyReleased(new EventHandler<Event>()
+		publicationData.setOnKeyReleased(new EventHandler<KeyEvent>()
 		{
 			@Override
-			public void handle(Event event)
+			public void handle(KeyEvent event)
 			{					
 				final BaseMqttMessage values = readMessage(false, true);
 				
@@ -302,6 +303,11 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 				{
 					lengthLabel.getStyleClass().add("noNewLines");
 				}
+
+				if (initialPaneSize == null)
+					initialPaneSize = getTitledPane().getHeight() - publicationData.getTotalHeightEstimate();
+				publicationData.setPrefHeight(publicationData.getTotalHeightEstimate());
+				getTitledPane().setMinHeight(initialPaneSize + Math.min(publicationData.getTotalHeightEstimate(), 3* initialPaneSize));
 			}
 		});
 		
