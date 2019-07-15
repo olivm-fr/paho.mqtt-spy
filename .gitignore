@@ -1,0 +1,6 @@
+**/generated
+**/target
+buildNumber.properties
+mqtt-spy-daemon.log
+mqtt-spy-daemon.messages
+
