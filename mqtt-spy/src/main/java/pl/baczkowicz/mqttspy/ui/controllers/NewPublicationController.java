@@ -165,7 +165,7 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 
 	protected MqttConnectionController connectionController;
 
-	private Double initialPaneSize;
+	private Double initialPaneSize, initialDataFieldSize;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -275,8 +275,26 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 	        	}
 	        }
 	    });
-			
+
 		publicationData.setWrapText(true);
+		publicationData.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (initialDataFieldSize == null)
+					initialDataFieldSize = publicationData.getViewportHeight();
+				if (initialPaneSize == null)
+					initialPaneSize = getTitledPane().getHeight();
+
+				double heightEstimate;
+				try {
+					heightEstimate = publicationData.getTotalHeightEstimate();
+				} catch (NullPointerException ignored) {
+					heightEstimate = publicationData.getViewportHeight();
+				}
+				publicationData.setPrefHeight(Math.min(heightEstimate, 10 * initialDataFieldSize));
+				getTitledPane().setMinHeight(initialPaneSize - initialDataFieldSize + publicationData.getPrefHeight());
+			}
+		});
 		publicationData.setOnKeyReleased(new EventHandler<KeyEvent>()
 		{
 			@Override
@@ -303,11 +321,6 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 				{
 					lengthLabel.getStyleClass().add("noNewLines");
 				}
-
-				if (initialPaneSize == null)
-					initialPaneSize = getTitledPane().getHeight() - publicationData.getTotalHeightEstimate();
-				publicationData.setPrefHeight(publicationData.getTotalHeightEstimate());
-				getTitledPane().setMinHeight(initialPaneSize + Math.min(publicationData.getTotalHeightEstimate(), 3* initialPaneSize));
 			}
 		});
 		

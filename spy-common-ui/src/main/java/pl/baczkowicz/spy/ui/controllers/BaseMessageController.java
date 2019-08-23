@@ -333,6 +333,7 @@ public abstract class BaseMessageController<T extends FormattedMessage>
 		// Won't refresh the text if it is the same...
 		if (!textToDisplay.equals(dataFieldInteface.getText()))
 		{
+			double scrollTop = dataField.getScrollTop();
 			dataFieldInteface.clear();
 			dataFieldInteface.appendText(textToDisplay);
 			dataFieldInteface.positionCaret(0);
@@ -352,6 +353,7 @@ public abstract class BaseMessageController<T extends FormattedMessage>
 					}
 				}
 			}
+			dataField.setScrollTop(scrollTop);
 		}						
 	}
 	

@@ -53,11 +53,11 @@
                 <children>
                    <ScrollBar fx:id="messageIndexScrollBar" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
-                   <VBox fx:id="messagesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="0.0">
+                   <AnchorPane fx:id="messagesPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="18.0" AnchorPane.topAnchor="0.0">
                       <children>
-	                     <fx:include fx:id="messagePane" source="MessagePane.fxml" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-10" VBox.vgrow="ALWAYS" />
+	                     <fx:include fx:id="messagePane" source="MessagePane.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-10" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-10" />
                       </children>
-                   </VBox>
+                   </AnchorPane>
 
                 </children>
              </AnchorPane>

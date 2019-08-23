@@ -180,7 +180,7 @@ public class SubscriptionController implements Initializable, TabController
 	private ScrollBar messageIndexScrollBar;
 	
 	@FXML
-	private VBox messagesPane;
+	private AnchorPane messagesPane;
 	
 	@FXML
 	private Slider messageCountSlider;
