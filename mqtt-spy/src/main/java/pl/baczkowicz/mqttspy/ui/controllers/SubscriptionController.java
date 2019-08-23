@@ -709,6 +709,14 @@ public class SubscriptionController implements Initializable, TabController
 			// Check if this is really a custom one
 			if (FormattingUtils.isDefault(formatter))
 			{
+                if (connectionProperties != null && formatter.equals(connectionProperties.getFormatter()))
+                {
+                    wholeMessageFormat.getToggles().forEach(toggle ->
+					{
+						if (formatter.equals(toggle.getUserData()))
+							wholeMessageFormat.selectToggle(toggle);
+					});
+                }
 				continue;
 			}
 			
