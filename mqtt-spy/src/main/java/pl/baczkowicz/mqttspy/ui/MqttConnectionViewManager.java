@@ -19,13 +19,7 @@
  */
 package pl.baczkowicz.mqttspy.ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.application.Platform;
@@ -57,6 +51,9 @@ import pl.baczkowicz.mqttspy.ui.events.queuable.connectivity.MqttDisconnectionAt
 import pl.baczkowicz.mqttspy.ui.scripts.InteractiveMqttScriptManager;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectivityUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
+import pl.baczkowicz.spy.common.generated.ProxyMode;
+import pl.baczkowicz.spy.common.generated.ProxyModeEnum;
+import pl.baczkowicz.spy.common.generated.ProxyModePassEnum;
 import pl.baczkowicz.spy.common.generated.UserCredentials;
 import pl.baczkowicz.spy.connectivity.ConnectionStatus;
 import pl.baczkowicz.spy.connectivity.ReconnectionManager;
@@ -114,6 +111,7 @@ public class MqttConnectionViewManager implements IConnectionViewManager
 	private ReconnectionManager reconnectionManager;
 
 	private Set<MqttConnectionController> offlineConnectionControllers = new HashSet<>();
+	private Map<String, String> proxyPasswords = new HashMap<>();
 
 	public MqttConnectionViewManager(final IKBus eventBus, final StatisticsManager statisticsManager, 
 			final IConfigurationManager configurationManager)
@@ -137,7 +135,7 @@ public class MqttConnectionViewManager implements IConnectionViewManager
 		connectionDetails.setConnectionDetails(configuredConnectionDetails);
 		connectionDetails.setID(configuredConnectionDetails.getID());			
 		
-		final boolean cancelled = completeUserAuthenticationCredentials(connectionDetails, parentStage);		
+		final boolean cancelled = completeUserAuthenticationCredentials(connectionDetails, parentStage) || completeProxyAuthenticationCredentials(connectionDetails, parentStage);
 		
 		if (!cancelled)
 		{
@@ -192,8 +190,35 @@ public class MqttConnectionViewManager implements IConnectionViewManager
 		}
 		
 		return false;
-	}	
-	
+	}
+
+	private boolean completeProxyAuthenticationCredentials(final UserInterfaceMqttConnectionDetails connectionDetails, final Stage stage)
+	{
+		if (connectionDetails.getProxyMode() != null && connectionDetails.getProxyMode().getType() != ProxyModeEnum.NO_PROXY)
+		{
+			// Copy so that we don't store it in the connection and don't save those values
+			final ProxyMode proxyMode = new ProxyMode();
+			connectionDetails.getProxyMode().copyTo(proxyMode);
+
+			// Check if ask for username or password, and then override existing values if confirmed
+			if (connectionDetails.getProxyMode().getPasswordType() == ProxyModePassEnum.ASKEDFOR)
+			{
+				proxyMode.setPassword(proxyPasswords.get(proxyMode.getUsername()));
+				// Password is decoded and encoded in this utility method
+				if (!DialogUtils.createMqttProxyPasswordDialog(stage, connectionDetails.getName(), proxyMode))
+				{
+					return true;
+				}
+				proxyPasswords.put(proxyMode.getUsername(), proxyMode.getPassword());
+			}
+
+			// Settings credentials so they can be validated and passed onto the MQTT client library
+			connectionDetails.setProxyMode(proxyMode);
+		}
+
+		return false;
+	}
+
 	/**
 	 * Gets a collection of all connections.
 	 * 
@@ -560,7 +585,7 @@ public class MqttConnectionViewManager implements IConnectionViewManager
 	 * 
 	 * @param state The next state
 	 * @param connection The connection to be used
-	 * @param mqttManager The MQTT manager to be used
+	 * @param connectionManager The MQTT manager to be used
 	 * 
 	 * @return The EventHandler with the action
 	 */

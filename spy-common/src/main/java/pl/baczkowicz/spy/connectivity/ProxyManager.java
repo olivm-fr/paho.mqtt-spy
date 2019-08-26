@@ -58,7 +58,7 @@ public class ProxyManager {
     /**
      * Sets in the JVM environment the proxy defined, for internet hosts only
      */
-    public static void loadProxy(String host, int port, String user, String password) {
+    public static void loadProxy(String host, int port, String user, char[] password) {
 
         if (host != null && !(host.isEmpty())) {
             logger.info("Using HTTP proxy {}{}{}", host, (user != null && !user.isEmpty()) ? " with user " : "", user);
@@ -99,7 +99,7 @@ public class ProxyManager {
                 Authenticator.setDefault(new Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
                         if (getRequestingHost() != null && getRequestingHost().equals(host))
-                            return new PasswordAuthentication(user, password.toCharArray());
+                            return new PasswordAuthentication(user, password);
                         return null;
                     }
                 });

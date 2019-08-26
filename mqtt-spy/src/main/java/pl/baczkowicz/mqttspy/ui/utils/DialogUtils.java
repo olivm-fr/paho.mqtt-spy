@@ -24,6 +24,7 @@ import java.util.Optional;
 import javafx.scene.control.Tooltip;
 import javafx.util.Pair;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
+import pl.baczkowicz.spy.common.generated.ProxyMode;
 import pl.baczkowicz.spy.common.generated.UserCredentials;
 import pl.baczkowicz.spy.configuration.BaseConfigurationUtils;
 import pl.baczkowicz.spy.connectivity.ConnectionStatus;
@@ -64,8 +65,38 @@ public class DialogUtils
 		
 		return false;
 	}
-	
-    /**
+
+
+	/**
+	 * Asks the user to review/complete password information.
+	 *
+	 * @param owner The window owner
+	 * @param connectionName Name of the connection
+	 * @param proxyMode Existing user credentials
+	 *
+	 * @return True when confirmed by user
+	 */
+	public static boolean createMqttProxyPasswordDialog(final Object owner, String connectionName, ProxyMode proxyMode) {
+		final Pair<String, String> userInfo = new Pair<String, String>(
+				proxyMode.getUsername(),
+				proxyMode.getPassword() != null ? BaseConfigurationUtils.decodePassword(proxyMode.getPassword()) : "");
+
+		Optional<Pair<String, String>> response = DialogFactory.createUsernameAndPasswordDialog(
+				"Proxy credentials",
+				"Proxy credentials for connection " + connectionName,
+				userInfo);
+
+		if (response.isPresent())
+		{
+			proxyMode.setUsername(response.get().getKey());
+			proxyMode.setPassword(BaseConfigurationUtils.encodePassword(response.get().getValue()));
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Updates the given connection tooltip with connection information.
 	 * 
 	 * @param connection The connection to which the tooltip refers

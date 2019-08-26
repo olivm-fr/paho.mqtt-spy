@@ -26,24 +26,37 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="210.0" prefWidth="593.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.controllers.edit.EditConnectionProxyController">
    <children>
       <Label layoutX="23.0" layoutY="20.0" text="Proxy type" />
       <ComboBox fx:id="modeCombo" layoutX="129.0" layoutY="15.0" prefHeight="25.0" prefWidth="449.0" AnchorPane.leftAnchor="199" AnchorPane.rightAnchor="14.0" />
 
-      <AnchorPane fx:id="details" layoutX="41.0" layoutY="53.0" prefHeight="161.0" prefWidth="534.0">
+      <AnchorPane fx:id="details" layoutX="41.0" layoutY="48.0" prefHeight="171.0" prefWidth="538.0">
          <children>
             <Label layoutX="12.0" layoutY="18.0" text="Hostname" />
             <TextField fx:id="hostname" layoutX="188.0" layoutY="14.0" prefHeight="25.0" prefWidth="350.0" />
             <Label layoutX="12.0" layoutY="49.0" text="Port" />
             <TextField fx:id="port" layoutX="188.0" layoutY="45.0" />
             <Label layoutX="13.0" layoutY="78.0" text="Username" />
-            <TextField fx:id="username" layoutX="188.0" layoutY="78.0" prefHeight="25.0" prefWidth="350.0" />
-            <Label layoutX="14.0" layoutY="112.0" text="Password" />
-            <PasswordField fx:id="password" layoutX="188.0" layoutY="108.0" prefHeight="26.0" prefWidth="350.0" />
+            <TextField fx:id="username" layoutX="188.0" layoutY="74.0" prefHeight="25.0" prefWidth="350.0" />
+            <Label layoutX="13.0" layoutY="127.0" text="Password" />
+            <PasswordField fx:id="password" disable="true" layoutX="292.0" layoutY="123.0" prefHeight="25.0" prefWidth="302.0" AnchorPane.leftAnchor="292.0" AnchorPane.rightAnchor="1.0" />
+            <RadioButton fx:id="predefinedPassword" layoutX="187.0" layoutY="127.0" mnemonicParsing="false" selected="true" text="Predefined">
+               <toggleGroup>
+                  <ToggleGroup fx:id="passwordProxyMode" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="askForPassword" layoutX="187.0" layoutY="149.0" mnemonicParsing="false" text="Ask before connecting" toggleGroup="$passwordProxyMode" />
+            <Label layoutX="196.0" layoutY="99.0" text="Hint: use &quot;domain\username&quot; for corporate proxies">
+               <font>
+                  <Font size="11.0" />
+               </font></Label>
          </children>
       </AnchorPane>
 

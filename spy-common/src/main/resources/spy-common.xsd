@@ -125,6 +125,7 @@
 			<xs:element name="Hostname" 			type="xs:string" minOccurs="0" />
 			<xs:element name="Port" 				type="xs:int" minOccurs="0" />
 			<xs:element name="Username" 			type="xs:string" minOccurs="0" />
+			<xs:element name="PasswordType"			type="spycommon:ProxyModePassEnum" minOccurs="0" />
 			<xs:element name="Password" 			type="xs:string" minOccurs="0" />
 		</xs:sequence>
 	</xs:complexType>
@@ -134,6 +135,13 @@
 			<xs:enumeration value="NO_PROXY" />
 			<xs:enumeration value="SOCKS" />
 			<xs:enumeration value="HTTP" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ProxyModePassEnum">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PREDEFINED" />
+			<xs:enumeration value="ASKEDFOR" />
 		</xs:restriction>
 	</xs:simpleType>
 

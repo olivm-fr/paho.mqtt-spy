@@ -30,6 +30,7 @@ import pl.baczkowicz.mqttspy.utils.MqttConfigurationUtils;
 import pl.baczkowicz.spy.common.generated.Property;
 import pl.baczkowicz.spy.common.generated.ProxyModeEnum;
 import pl.baczkowicz.spy.common.generated.SecureSocketModeEnum;
+import pl.baczkowicz.spy.configuration.BaseConfigurationUtils;
 import pl.baczkowicz.spy.connectivity.ProxyManager;
 import pl.baczkowicz.spy.exceptions.ConfigurationException;
 import pl.baczkowicz.spy.exceptions.SpyException;
@@ -203,8 +204,14 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		// Proxy
 		if (getProxyMode() != null && getProxyMode().getType() != ProxyModeEnum.NO_PROXY
 			&& getProxyMode().getHostname() != null && getProxyMode().getHostname().length() > 0
-			&& getProxyMode().getPort() != null && getProxyMode().getPort() != 0) {
-			ProxyManager.loadProxy(getProxyMode().getHostname(), getProxyMode().getPort(), getProxyMode().getUsername(), getProxyMode().getPassword());
+			&& getProxyMode().getPort() != null && getProxyMode().getPort() != 0)
+		{
+			final char[] password;
+			if (getProxyMode().getPasswordType() == null)
+				password = getProxyMode().getPassword().toCharArray(); // old-fashioned
+			else
+				password = BaseConfigurationUtils.decodePassword(getProxyMode().getPassword()).toCharArray();
+			ProxyManager.loadProxy(getProxyMode().getHostname(), getProxyMode().getPort(), getProxyMode().getUsername(), password);
 			if (options.getSocketFactory() instanceof SSLSocketFactory)
 				options.setSocketFactory(new HttpsProxySocketFactory((SSLSocketFactory)options.getSocketFactory()));
 			else

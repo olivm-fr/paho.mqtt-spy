@@ -45,6 +45,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -240,6 +242,10 @@ public class DialogFactory
 		    loginButton.setDisable(newValue.trim().isEmpty());
 		});
 
+		password.setOnAction(e -> {
+			loginButton.fireEvent(new KeyEvent(KeyEvent.KEY_PRESSED, "", "", KeyCode.ENTER, false, false, false, false));
+		});
+
 		dialog.getDialogPane().setContent(grid);
 
 		// Convert the result to a username-password-pair
@@ -252,7 +258,12 @@ public class DialogFactory
 		    return null;
 		});
 
-		Platform.runLater(() -> username.requestFocus());
+		Platform.runLater(() -> {
+			if (userInfo.getValue().length() == 0 && userInfo.getKey().length() > 0)
+				password.requestFocus();
+			else
+				username.requestFocus();
+		});
 		return dialog.showAndWait();
 	}
 

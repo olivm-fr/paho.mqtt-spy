@@ -24,6 +24,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnection
 import pl.baczkowicz.mqttspy.utils.MqttConfigurationUtils;
 import pl.baczkowicz.spy.common.generated.ProxyMode;
 import pl.baczkowicz.spy.common.generated.ProxyModeEnum;
+import pl.baczkowicz.spy.common.generated.ProxyModePassEnum;
 import pl.baczkowicz.spy.storage.MessageList;
 
 public class ConfigurationUtils
@@ -73,7 +74,7 @@ public class ConfigurationUtils
 
 		if (connection.getProxyMode() == null)
 		{
-			connection.setProxyMode(new ProxyMode(ProxyModeEnum.NO_PROXY, null, null, null, null));
+			connection.setProxyMode(new ProxyMode(ProxyModeEnum.NO_PROXY, null, null, null, ProxyModePassEnum.ASKEDFOR, null));
 		}
 	}
 }
