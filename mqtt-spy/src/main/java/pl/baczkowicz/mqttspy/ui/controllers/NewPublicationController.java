@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -285,14 +286,19 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 				if (initialPaneSize == null)
 					initialPaneSize = getTitledPane().getHeight();
 
-				double heightEstimate;
-				try {
-					heightEstimate = publicationData.getTotalHeightEstimate();
-				} catch (NullPointerException ignored) {
-					heightEstimate = publicationData.getViewportHeight();
-				}
-				publicationData.setPrefHeight(Math.min(heightEstimate, 10 * initialDataFieldSize));
-				getTitledPane().setMinHeight(initialPaneSize - initialDataFieldSize + publicationData.getPrefHeight());
+				// publicationData.getTotalHeightEstimate() computation is not ready yet
+				Platform.runLater(() -> {
+						double heightEstimate;
+						try {
+							heightEstimate = publicationData.getTotalHeightEstimate();
+						} catch (NullPointerException ignored) {
+							// publicationData.getTotalHeightEstimate() throws NPE when 1 line only
+							heightEstimate = publicationData.getViewportHeight();
+						}
+						publicationData.setPrefHeight(Math.min(heightEstimate, 10 * initialDataFieldSize));
+						getTitledPane().setMinHeight(initialPaneSize - initialDataFieldSize + publicationData.getPrefHeight());
+					}
+				);
 			}
 		});
 		publicationData.setOnKeyReleased(new EventHandler<KeyEvent>()
