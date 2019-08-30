@@ -27,7 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -53,6 +54,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
+import javafx.util.Duration;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -287,18 +289,21 @@ public class NewPublicationController implements Initializable, TitledPaneContro
 					initialPaneSize = getTitledPane().getHeight();
 
 				// publicationData.getTotalHeightEstimate() computation is not ready yet
-				Platform.runLater(() -> {
-						double heightEstimate;
-						try {
-							heightEstimate = publicationData.getTotalHeightEstimate();
-						} catch (NullPointerException ignored) {
-							// publicationData.getTotalHeightEstimate() throws NPE when 1 line only
-							heightEstimate = publicationData.getViewportHeight();
-						}
-						publicationData.setPrefHeight(Math.min(heightEstimate, 10 * initialDataFieldSize));
-						getTitledPane().setMinHeight(initialPaneSize - initialDataFieldSize + publicationData.getPrefHeight());
-					}
-				);
+				Timeline timeline = new Timeline(new KeyFrame(
+						Duration.millis(100),
+						ae -> {
+							double heightEstimate;
+							try {
+								heightEstimate = publicationData.getTotalHeightEstimate();
+							} catch (NullPointerException ignored) {
+								// publicationData.getTotalHeightEstimate() throws NPE when 1 line only
+								heightEstimate = publicationData.getViewportHeight();
+							}
+							publicationData.setPrefHeight(Math.min(heightEstimate, 10 * initialDataFieldSize));
+							getTitledPane().setMinHeight(initialPaneSize - initialDataFieldSize + publicationData.getPrefHeight());
+							logger.info("Requesting pane size to {} (field requests {})", getTitledPane().getMinHeight(), heightEstimate);
+						}));
+				timeline.play();
 			}
 		});
 		publicationData.setOnKeyReleased(new EventHandler<KeyEvent>()
